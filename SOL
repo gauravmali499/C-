@@ -1,0 +1,163 @@
+using System;
+using System.Collections.Generic;
+
+class Mobike
+{
+    public string BikeNumber { get; set; }
+    public string PhoneNumber { get; set; }
+    public string Name { get; set; }
+    public int Days { get; set; }
+    public double Charge { get; set; }
+
+    public void Input()
+    {
+        Console.WriteLine("Enter Bike Number:");
+        BikeNumber = Console.ReadLine();
+
+        Console.WriteLine("Enter Phone Number:");
+        PhoneNumber = Console.ReadLine();
+
+        Console.WriteLine("Enter Name:");
+        Name = Console.ReadLine();
+
+        Console.WriteLine("Enter Number of Days:");
+        Days = Convert.ToInt32(Console.ReadLine());
+    }
+
+    public void Compute()
+    {
+        if (Days <= 5)
+        {
+            Charge = Days * 500;
+        }
+        else if (Days <= 10)
+        {
+            Charge = 5 * 500 + (Days - 5) * 400;
+        }
+        else
+        {
+            Charge = 5 * 500 + 5 * 400 + (Days - 10) * 200;
+        }
+    }
+
+    public void Display()
+    {
+        Console.WriteLine("Bike No.\tPhoneNo\t\tNo. of days\tCharge");
+        Console.WriteLine($"{BikeNumber}\t\t{PhoneNumber}\t{Days}\t\t{Charge}");
+    }
+}
+
+class Program
+{
+    static List<Mobike> customers = new List<Mobike>();
+
+    static void Main(string[] args)
+    {
+        int choice;
+        do
+        {
+            Console.WriteLine("\n1. Add Customer");
+            Console.WriteLine("2. Delete Customer");
+            Console.WriteLine("3. Edit Customer");
+            Console.WriteLine("4. Search Customer");
+            Console.WriteLine("5. Display All Customers");
+            Console.WriteLine("6. Exit");
+            Console.Write("Enter your choice: ");
+            choice = Convert.ToInt32(Console.ReadLine());
+
+            switch (choice)
+            {
+                case 1:
+                    AddCustomer();
+                    break;
+                case 2:
+                    DeleteCustomer();
+                    break;
+                case 3:
+                    EditCustomer();
+                    break;
+                case 4:
+                    SearchCustomer();
+                    break;
+                case 5:
+                    DisplayAllCustomers();
+                    break;
+                case 6:
+                    Console.WriteLine("Exiting...");
+                    break;
+                default:
+                    Console.WriteLine("Invalid choice! Please try again.");
+                    break;
+            }
+        } while (choice != 6);
+    }
+
+    static void AddCustomer()
+    {
+        Mobike customer = new Mobike();
+        customer.Input();
+        customer.Compute();
+        customers.Add(customer);
+        Console.WriteLine("Customer added successfully.");
+    }
+
+    static void DeleteCustomer()
+    {
+        Console.WriteLine("Enter the Bike Number of the customer to delete:");
+        string bikeNumber = Console.ReadLine();
+        Mobike customerToRemove = customers.Find(c => c.BikeNumber == bikeNumber);
+        if (customerToRemove != null)
+        {
+            customers.Remove(customerToRemove);
+            Console.WriteLine("Customer deleted successfully.");
+        }
+        else
+        {
+            Console.WriteLine("Customer not found.");
+        }
+    }
+
+    static void EditCustomer()
+    {
+        Console.WriteLine("Enter the Bike Number of the customer to edit:");
+        string bikeNumber = Console.ReadLine();
+        Mobike customerToEdit = customers.Find(c => c.BikeNumber == bikeNumber);
+        if (customerToEdit != null)
+        {
+            Console.WriteLine("Enter updated details:");
+            customerToEdit.Input();
+            customerToEdit.Compute();
+            Console.WriteLine("Customer details updated successfully.");
+        }
+        else
+        {
+            Console.WriteLine("Customer not found.");
+        }
+    }
+
+    static void SearchCustomer()
+    {
+        Console.WriteLine("Enter the Bike Number of the customer to search:");
+        string bikeNumber = Console.ReadLine();
+        Mobike customerFound = customers.Find(c => c.BikeNumber == bikeNumber);
+        if (customerFound != null)
+        {
+            Console.WriteLine("Customer found:");
+            customerFound.Display();
+        }
+        else
+        {
+            Console.WriteLine("Customer not found.");
+        }
+    }
+
+    static void DisplayAllCustomers()
+    {
+        Console.WriteLine("All Customers:");
+        Console.WriteLine("Bike No.\tPhoneNo\t\tNo. of days\tCharge");
+        foreach (var customer in customers)
+        {
+            customer.Display();
+        }
+    }
+}
